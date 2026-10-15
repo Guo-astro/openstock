@@ -1,7 +1,13 @@
 
 
+<p align="center"><sub><a href="#sponsors">SPONSORED BY</a></sub></p>
+
 <p align="center">
-  <b>New:</b> <a href="https://github.com/diip3sh/orbit"><b>Orbit</b></a>. Free, open-source macOS screen recorder, screenshot tool and video editor: auto-zoom, smooth cursor, backgrounds, web recordings and AI agent recording.
+  <a href="https://www.rapidproxy.io/?ref=openstock"><img src="public/assets/images/rapidproxy-banner.png" alt="RapidProxy: try for free, 90M+ clean residential IPs" width="420"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/diip3sh/orbit"><picture><source media="(prefers-color-scheme: dark)" srcset="public/assets/icons/orbit.png"><img src="public/assets/icons/orbit-black.png" alt="" height="20"></picture></a> <a href="https://github.com/diip3sh/orbit"><b>Orbit</b></a>. Free, open-source macOS screen recorder, screenshot tool and video editor: auto-zoom, smooth cursor, backgrounds, web recordings and AI agent recording.
 </p>
 
 <p align="center">
@@ -547,7 +553,7 @@ Sponsorships are paid through GitHub Sponsors to [@ravixalgorithm](https://githu
 
 Can't sponsor right now? Pick a [good first issue](https://github.com/Open-Dev-Society/OpenStock/issues?q=is%3Aopen+label%3A%22good+first+issue%22), star the repo, or share OpenStock with someone who pays too much for a terminal.
 
-**Current sponsors:** <a href="https://github.com/diip3sh/orbit"><picture><source media="(prefers-color-scheme: dark)" srcset="public/assets/icons/orbit.png"><img src="public/assets/icons/orbit-black.png" alt="" height="20"></picture></a> [Orbit](https://github.com/diip3sh/orbit), a free, open-source screen recorder and video editor for macOS.
+**Current sponsors** are shown at the [top of this README](#readme): [RapidProxy](https://www.rapidproxy.io/?ref=openstock) · [Orbit](https://github.com/diip3sh/orbit)
 **Previously backed by:** [Atlas Cloud](https://www.atlascloud.ai) · [Siray.ai](https://www.siray.ai/) (2026)
 
 ## Special thanks

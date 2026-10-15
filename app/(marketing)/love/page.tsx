@@ -4,7 +4,7 @@ import { Tweet } from "react-tweet";
 import PageHero from "@/components/marketing/PageHero";
 import SectionHead from "@/components/marketing/SectionHead";
 import { REPO_URL } from "@/lib/constants";
-import { ACTIVE_SPONSORS, PREVIOUS_SPONSORS, SUPPORTERS } from "@/lib/sponsors";
+import { ACTIVE_SPONSORS, PREVIOUS_SPONSORS, SPONSOR_TIERS, SUPPORTERS, type Sponsor } from "@/lib/sponsors";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -39,9 +39,15 @@ const PRAISE: Praise[] = [
 
 type WallItem = { name: string; url: string; label: string; logo?: string; iconOnly?: boolean; avatar?: string };
 
+// "Partner", "Company", or "Sponsor" when no tier is recorded
+const tierLabel = (s: Sponsor) => SPONSOR_TIERS.find((t) => t.id === s.tier)?.name ?? 'Sponsor';
+
 const WALL: WallItem[] = [
-    ...ACTIVE_SPONSORS.map((s) => ({ name: s.name, url: s.url, logo: s.logo, iconOnly: s.iconOnly, label: 'Sponsor' })),
-    ...PREVIOUS_SPONSORS.map((s) => ({ name: s.name, url: s.url, logo: s.logo, iconOnly: s.iconOnly, label: s.period ? `Past sponsor · ${s.period}` : 'Past sponsor' })),
+    ...ACTIVE_SPONSORS.map((s) => ({ name: s.name, url: s.url, logo: s.logo, iconOnly: s.iconOnly, label: tierLabel(s) })),
+    ...PREVIOUS_SPONSORS.map((s) => {
+        const label = `Past ${tierLabel(s).toLowerCase()}`;
+        return { name: s.name, url: s.url, logo: s.logo, iconOnly: s.iconOnly, label: s.period ? `${label} · ${s.period}` : label };
+    }),
     ...SUPPORTERS.map((s) => ({ name: s.name, url: `https://github.com/${s.login}`, avatar: `https://github.com/${s.login}.png?size=64`, label: 'Supporter' })),
 ];
 
