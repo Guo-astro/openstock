@@ -256,6 +256,8 @@ volumes:
 
 [![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploylobe.svg)](https://repocloud.io/details/OpenStock/)
 
+[![Deploy to ZopDay](https://zop.dev/deploytozopday-inkhard.svg)](https://zop.dev/zopday/app/deploy?repo=https://github.com/Open-Dev-Society/OpenStock&port=3000&name=openstock&utm_source=github&utm_medium=one_click&utm_content=openstock)
+
 ## 🔐 Environment Variables <a name="environment-variables"></a>
 
 Create `.env` at the project root. Choose either a hosted MongoDB (Atlas) URI or the local Docker URI.
