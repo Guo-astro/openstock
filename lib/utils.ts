@@ -225,6 +225,11 @@ export const isChartEmbeddable = (tvSymbol: string) => !CHART_BLOCKED_EXCHANGES.
 
 export const tradingViewSymbolUrl = (tvSymbol: string) => `https://www.tradingview.com/symbols/${tvSymbol.replace(':', '-')}/`;
 
+// Finnhub writes share classes and symbols with - or &; on these exchanges TradingView only knows its own spelling
+// (the Finnhub one shows "This symbol doesn't exist"): BAJAJ-AUTO.NS → BSE:BAJAJ_AUTO, M&M.NS → BSE:M_M,
+// ERIC-B.ST → OMXSTO:ERIC_B, NOVO-B.CO → OMXCOP:NOVO_B, BT-A.L → LSE:BT.A. TSX accepts RCI-B as is.
+const TICKER_SEPARATOR: Record<string, string> = { BSE: '_', OMXSTO: '_', OMXCOP: '_', LSE: '.' };
+
 // Listed outside the US (has a known exchange suffix like .L, .T, .NS). Class shares such as BRK.B are not.
 export function isInternationalSymbol(symbol: string): boolean {
     const upper = symbol.toUpperCase();
@@ -243,8 +248,10 @@ export function formatSymbolForTradingView(symbol: string): string {
     for (const suffix of suffixes) {
         if (upperSymbol.endsWith(suffix.toUpperCase())) {
             const exchange = FINNHUB_TO_TRADINGVIEW_EXCHANGE[suffix];
+            let ticker = upperSymbol.slice(0, -suffix.length);
             // Finnhub pads Hong Kong codes (0700.HK); TradingView doesn't (HKEX:700)
-            const ticker = exchange === 'HKEX' ? upperSymbol.slice(0, -suffix.length).replace(/^0+(?=\d)/, '') : upperSymbol.slice(0, -suffix.length);
+            if (exchange === 'HKEX') ticker = ticker.replace(/^0+(?=\d)/, '');
+            if (TICKER_SEPARATOR[exchange]) ticker = ticker.replace(/[-&]/g, TICKER_SEPARATOR[exchange]);
             return `${exchange}:${ticker}`;
         }
     }
