@@ -261,7 +261,7 @@ volumes:
 
 ## 🚂 Deploy on Railway <a name="deploy-on-railway"></a>
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openstock-1?referralCode=oYrWPR&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openstock-1?utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 The one-click template provisions OpenStock and a MongoDB database and prompts for your API keys. To set it up manually instead:
 
