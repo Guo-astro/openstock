@@ -267,3 +267,15 @@ export const escapeHtml = (value: string) =>
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+
+// The welcome intro is AI output from a prompt that includes sign-up fields, so it is untrusted HTML.
+// Keep its text and plain <strong>, drop every other tag (links, images, styles), and wrap it ourselves.
+export const sanitizeEmailIntro = (html: string) => {
+    const text = html
+        .replace(/<strong\b[^>]*>/gi, '<strong>') // keep the emphasis balanced, drop its attributes
+        .replace(/<(?!\/?strong>)[^>]*>/gi, '')
+        .replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+        .trim();
+    const safe = escapeHtml(text).replace(/&lt;(\/?)strong&gt;/gi, '<$1strong>');
+    return `<p class="mobile-text" style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #CCDADC;">${safe}</p>`;
+};

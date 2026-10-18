@@ -3,8 +3,21 @@
 import { auth } from "@/lib/better-auth/auth";
 import { inngest } from "@/lib/inngest/client";
 import { headers } from "next/headers";
+import { INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from "@/lib/constants";
+import countryList from "react-select-country-list";
+
+const isOption = (options: readonly { value: string }[], value: unknown) => options.some((o) => o.value === value);
+const COUNTRY_CODES = new Set(countryList().getValues()); // the same list the sign-up country picker shows
 
 export const signUpWithEmail = async ({ email, password, fullName, country, investmentGoals, riskTolerance, preferredIndustry }: SignUpFormData) => {
+    // These fields go into the AI prompt for the welcome email, so only accept the form's own values
+    if (typeof fullName !== 'string' || !fullName.trim() || fullName.length > 80
+        || typeof country !== 'string' || !COUNTRY_CODES.has(country)
+        || !isOption(INVESTMENT_GOALS, investmentGoals)
+        || !isOption(RISK_TOLERANCE_OPTIONS, riskTolerance)
+        || !isOption(PREFERRED_INDUSTRIES, preferredIndustry)) {
+        return { success: false, error: 'Sign up failed' };
+    }
     try {
         const response = await auth.api.signUpEmail({ body: { email, password, name: fullName, country, investmentGoals, riskTolerance, preferredIndustry } })
 
