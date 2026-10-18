@@ -23,6 +23,6 @@ describe('sendWelcomeEmail', () => {
         expect(html).not.toContain('<img src=x');
         expect(html).not.toContain('onclick');
         expect(html).toContain('&lt;a href=&quot;https://evil.example&quot;&gt;Click&lt;/a&gt; $&#39; $&amp;');
-        expect(html).toContain('Hi <strong>growth</strong> fan. Verify your accountbold</strong> R&amp;D</p>');
+        expect(html).toContain('Hi <strong>growth</strong> fan. Verify your account<strong>bold</strong> R&amp;D</p>');
     });
 });

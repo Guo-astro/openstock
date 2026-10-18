@@ -272,6 +272,7 @@ export const escapeHtml = (value: string) =>
 // Keep its text and plain <strong>, drop every other tag (links, images, styles), and wrap it ourselves.
 export const sanitizeEmailIntro = (html: string) => {
     const text = html
+        .replace(/<strong\b[^>]*>/gi, '<strong>') // keep the emphasis balanced, drop its attributes
         .replace(/<(?!\/?strong>)[^>]*>/gi, '')
         .replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
         .trim();
