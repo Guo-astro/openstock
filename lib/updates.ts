@@ -39,6 +39,7 @@ export const UPDATES: Update[] = [
                 title: 'Security',
                 items: [
                     'Sign-in, sign-up and password reset are rate-limited, so nobody can guess passwords or flood inboxes.',
+                    'Resetting your password signs you out on every other device.',
                     'Welcome emails can no longer carry links or markup injected at sign-up.',
                     'Next.js security update covering about 30 advisories.',
                 ],
