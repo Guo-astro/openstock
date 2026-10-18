@@ -30,6 +30,8 @@ const createAuth = (database: MongoDb) => betterAuth({
             minPasswordLength: 8,
             maxPasswordLength: 128,
             autoSignIn: true,
+            // A reset is how a victim takes an account back: sign out every other session (off by default)
+            revokeSessionsOnPasswordReset: true,
             sendResetPassword: async ({ user, url }) => {
                 void sendPasswordResetEmail({
                     email: user.email,
@@ -72,6 +74,12 @@ let authInstance: ReturnType<typeof createAuth> | null = null;
 
 export const getAuth = async () => {
     if (authInstance) return authInstance;
+
+    // Without a secret better-auth only logs an error and signs cookies with a public default, so anyone could forge
+    // a session. Checked here (first use), not at import, so `next build` still runs without secrets.
+    if (process.env.NODE_ENV === 'production' && !process.env.BETTER_AUTH_SECRET && !process.env.AUTH_SECRET) {
+        throw new Error('BETTER_AUTH_SECRET must be set in production');
+    }
 
     const mongoose = await connectToDatabase();
     const database = mongoose.connection.db;
