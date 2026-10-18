@@ -1,45 +1,53 @@
 'use client';
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, X } from "lucide-react";
-import { LATEST_UPDATE } from "@/lib/updates";
+import { ArrowRight, Check } from "lucide-react";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { LATEST_RELEASE } from "@/lib/changelog";
 import { cn } from "@/lib/utils";
 
-const STORAGE_KEY = 'openstock:update-seen';
-
-// Announces the latest release until it's dismissed or opened. Rendered only after mount, so people who already
-// closed it never see it flash in.
+// Always shows the latest release. The whole strip opens a short summary; the full history is on /changelog.
 export default function UpdateBanner({ className }: { className?: string }) {
-    const [visible, setVisible] = useState(false);
-    useEffect(() => {
-        try { setVisible(localStorage.getItem(STORAGE_KEY) !== LATEST_UPDATE.id); } catch { setVisible(true); }
-    }, []);
-
-    if (!visible) return null;
-
-    const markSeen = () => {
-        setVisible(false);
-        try { localStorage.setItem(STORAGE_KEY, LATEST_UPDATE.id); } catch { /* private mode: hidden for this visit */ }
-    };
-
     return (
-        <div
-            role="region"
-            aria-label="What's new"
-            className={cn('flex items-center gap-2.5 rounded-[12px] bg-brand-soft/50 py-1.5 pl-2 pr-1.5 text-[13px] shadow-[inset_0_0_0_1px_oklch(0.8_0.13_176/0.25)]', className)}
-        >
-            <span className="pill is-brand shrink-0">New</span>
-            <p className="min-w-0 flex-1 truncate">
-                <span className="font-semibold text-foreground">{LATEST_UPDATE.title}:</span>{' '}
-                <span className="text-muted-foreground">{LATEST_UPDATE.headline}</span>
-            </p>
-            <Link href="/whats-new" onClick={markSeen} className="flex shrink-0 items-center gap-1 font-semibold text-brand-ink hover:underline">
-                What’s new <ArrowRight className="size-3.5" />
-            </Link>
-            <button type="button" onClick={markSeen} className="icon-btn size-7 shrink-0" aria-label="Dismiss update banner" title="Dismiss">
-                <X className="size-3.5" />
-            </button>
-        </div>
+        <Dialog>
+            <DialogTrigger
+                className={cn(
+                    'group flex w-full items-center gap-2.5 rounded-[12px] bg-brand-soft/50 py-1.5 pl-2 pr-3 text-left text-[13px] shadow-[inset_0_0_0_1px_oklch(0.8_0.13_176/0.25)] transition-colors hover:bg-brand-soft/80',
+                    className,
+                )}
+            >
+                <span className="pill is-brand shrink-0">New</span>
+                <span className="min-w-0 flex-1 truncate">
+                    <span className="font-semibold text-foreground">{LATEST_RELEASE.title}:</span>{' '}
+                    <span className="text-muted-foreground">{LATEST_RELEASE.summary}</span>
+                </span>
+                <span className="flex shrink-0 items-center gap-1 font-semibold text-brand-ink">
+                    <span className="max-sm:hidden">See what’s new</span>
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                </span>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-md">
+                <div>
+                    <p className="kicker text-brand-ink">{LATEST_RELEASE.date}</p>
+                    <DialogTitle className="mt-1.5 text-[22px] font-bold tracking-[-0.03em]">{LATEST_RELEASE.title}</DialogTitle>
+                    <DialogDescription className="mt-1 text-[14px] text-muted-foreground">{LATEST_RELEASE.summary}.</DialogDescription>
+                </div>
+                <ul className="flex flex-col gap-2.5 text-[14px] leading-relaxed">
+                    {(LATEST_RELEASE.highlights ?? []).map((item) => (
+                        <li key={item} className="flex gap-2.5">
+                            <Check className="mt-1 size-4 flex-none text-brand-ink" />
+                            <span>{item}</span>
+                        </li>
+                    ))}
+                </ul>
+                {/* Closes the modal too: the banner stays mounted across navigations */}
+                <DialogClose asChild>
+                    <Link href="/changelog" className="btn btn-primary h-10 w-full">
+                        Read the full changelog <ArrowRight />
+                    </Link>
+                </DialogClose>
+            </DialogContent>
+        </Dialog>
     );
 }
