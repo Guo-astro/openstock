@@ -9,7 +9,10 @@ import { getSession } from '@/lib/better-auth/auth';
 
 const FINNHUB_BASE_URL = 'https://finnhub.io/api/v1';
 // Key pool: each free key has its own 60 req/min, so N keys = N x the quota. Rotated per request.
-const FINNHUB_KEYS = (process.env.FINNHUB_API_KEYS || process.env.NEXT_PUBLIC_FINNHUB_API_KEY || process.env.FINNHUB_API_KEY || '')
+// Read through an alias: `next build` freezes a literal process.env.NEXT_PUBLIC_* into the bundle, so Docker and
+// Railway images (built without secrets) would ignore a NEXT_PUBLIC_FINNHUB_API_KEY set at runtime.
+const env = process.env;
+const FINNHUB_KEYS = (env.FINNHUB_API_KEYS || env.NEXT_PUBLIC_FINNHUB_API_KEY || env.FINNHUB_API_KEY || '')
     .split(',')
     .map((k) => k.trim())
     .filter(Boolean);
