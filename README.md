@@ -224,6 +224,12 @@ docker compose up -d --build
 - App: http://localhost:3000
 - MongoDB is only reachable inside the Docker network, at host mongodb:27017. It isn't published on your machine.
 
+Prefer not to build? Every push to `main` publishes a prebuilt image (amd64 and arm64) to GitHub Container Registry. In `docker-compose.yml`, replace `build: context: .` under `openstock` with:
+```yaml
+    image: ghcr.io/open-dev-society/openstock:latest
+```
+then run `docker compose pull && docker compose up -d`. Tags: `latest` (main), `sha-<commit>`, and `x.y.z` for releases. The image contains no secrets; all configuration comes from your `.env` at runtime.
+
 Notes
 - The app service depends_on the mongodb service.
 - The MongoDB root password comes from `MONGO_ROOT_PASSWORD` (default `example`, only applied when the volume is first created); authSource=admin is required on the connection string for root.

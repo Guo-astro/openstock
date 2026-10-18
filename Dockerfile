@@ -1,5 +1,5 @@
-# Use official Node.js 20 Alpine image as base
-FROM node:20-alpine
+# Node 22 LTS (Node 20 reached end of life in April 2026)
+FROM node:22-alpine
 
 # Set working directory
 WORKDIR /app
@@ -9,8 +9,8 @@ COPY package*.json ./
 # Uncomment the next line if you use pnpm and have pnpm-lock.yaml
 # COPY pnpm-lock.yaml ./
 
-# Install dependencies (choose npm or pnpm)
-RUN npm install
+# Install exactly what package-lock.json pins (choose npm or pnpm)
+RUN npm ci
 # If using pnpm, replace with:
 # RUN npm install -g pnpm && pnpm install
 
