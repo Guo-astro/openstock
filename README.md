@@ -208,7 +208,7 @@ You can run OpenStock and MongoDB easily with Docker Compose.
 - openstock (this app)
 - mongodb (MongoDB database with a persistent volume)
 
-3) Create your `.env` (see examples below). For the Docker setup, pick a MongoDB password and use it in both places:
+3) Create your `.env` (see examples below). For the Docker setup, pick a MongoDB password and use it in both places (letters and digits are simplest; `@ : / ? #` must be percent-encoded inside `MONGODB_URI`):
 ```env
 MONGO_ROOT_PASSWORD=change-me
 MONGODB_URI=mongodb://root:change-me@mongodb:27017/openstock?authSource=admin
