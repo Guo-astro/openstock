@@ -5,6 +5,7 @@ import { getSession } from "@/lib/better-auth/auth";
 import { formatCount, getRepoStats } from "@/lib/github";
 import OpenDevSocietyBranding from "@/components/OpenDevSocietyBranding";
 import SponsorsBand from "@/components/sponsors/SponsorsBand";
+import UpdateBanner from "@/components/UpdateBanner";
 import { DISCORD_URL, REPO_URL } from "@/lib/constants";
 
 const FOOTER_LINKS = [
@@ -14,6 +15,7 @@ const FOOTER_LINKS = [
     { href: '/terms', label: 'Terms' },
     { href: '/sponsor', label: 'Sponsor' },
     { href: '/love', label: 'Wall of love' },
+    { href: '/whats-new', label: 'What’s new' },
     { href: REPO_URL, label: 'GitHub' },
     { href: DISCORD_URL, label: 'Discord' },
     { href: 'https://www.linkedin.com/company/opendevsociety-in/', label: 'LinkedIn' },
@@ -25,6 +27,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
 
     return (
         <div className="min-h-dvh bg-page">
+            <UpdateBanner className="mx-5 mt-3 xl:mx-auto xl:max-w-[1160px]" />
             <header className="sticky top-0 z-40 border-b border-transparent bg-page/80 backdrop-blur-md">
                 <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-6 px-5">
                     <Link href="/" aria-label="OpenStock home" className="shrink-0">
