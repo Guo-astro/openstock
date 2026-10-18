@@ -1,5 +1,9 @@
 // OpenStock's changelog, newest first. The banner and its modal show RELEASES[0]; /changelog shows the whole timeline.
 // Write "#123" in an item to link that pull request.
+// Who made a release happen: pull requests they wrote and issues they opened that led to a change.
+// Taken from GitHub (PR authors and the issues each PR closed); bots aren't listed.
+export type Credit = { login: string; prs?: number[]; issues?: number[] };
+
 export type Release = {
     id: string;
     date: string;
@@ -7,7 +11,10 @@ export type Release = {
     summary: string;
     highlights?: string[]; // the short list in the banner's modal (latest release only)
     sections: { title: string; items: string[] }[];
+    credits: Credit[];
 };
+
+export const MAINTAINER = 'ravixalgorithm';
 
 export const RELEASES: Release[] = [
     {
@@ -65,6 +72,18 @@ export const RELEASES: Release[] = [
                 ],
             },
         ],
+        credits: [
+            { login: 'ravixalgorithm', prs: [116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130] },
+            { login: 'cosmind-rusu', prs: [94] },
+            { login: 'Yi-111-a', prs: [110] },
+            { login: 'cosark', prs: [111] },
+            { login: 'muskanbandta23', prs: [115] },
+            { login: 'nexitpl', issues: [47, 54] },
+            { login: 'brainistry10', issues: [113] },
+            { login: 'Greatz08', issues: [83] },
+            { login: 'saschabrockel', issues: [36] },
+            { login: 'a-lacruz', issues: [109] },
+        ],
     },
     {
         id: '2026-09-25',
@@ -97,8 +116,22 @@ export const RELEASES: Release[] = [
                     'Pages no longer hang when market data is slow, and email addresses with + are accepted. #106',
                     'Charts no longer get stuck on exchanges TradingView blocks, or on Hong Kong stocks.',
                     'A clearer environment check for self-hosters. #104',
+                    'The README now says the news summary is weekly, not daily. #91',
+                    'Community fixes brought into the redesign: no “NaN” market cap #82, Taiwan in the country picker #70, indicators that survive fullscreen #68, optional email settings #69, and tests for alert actions #93.',
                 ],
             },
+        ],
+        credits: [
+            { login: 'ravixalgorithm', prs: [106] },
+            { login: 'keshav-005', prs: [68, 69, 70] },
+            { login: 'Mubashirrrr', prs: [82] },
+            { login: 'fuxicodex', prs: [93] },
+            { login: 'BambaSatoru', prs: [104] },
+            { login: 'kuishou68', prs: [91] },
+            { login: 'nexitpl', issues: [49] },
+            { login: 'juipeter-pixel', issues: [34] },
+            { login: 'soonfatt', issues: [38] },
+            { login: 'khajaG321', issues: [28] },
         ],
     },
     {
@@ -116,6 +149,11 @@ export const RELEASES: Release[] = [
                 ],
             },
         ],
+        credits: [
+            { login: 'akoweicollinxx', prs: [84, 85] },
+            { login: 'octo-patch', prs: [87] },
+            { login: 'maxsyst', issues: [37] },
+        ],
     },
     {
         id: '2026-05',
@@ -130,8 +168,17 @@ export const RELEASES: Release[] = [
                     'Sign-up shows the password rules and ticks them off as you type. #79',
                     'Charts show the right time zone. #72',
                     'Search shows the correct exchange and company details. #73',
+                    'No more Turbopack warning about the project root when running locally. #74',
                 ],
             },
+        ],
+        credits: [
+            { login: 'keshav-005', prs: [71, 72, 73, 74] },
+            { login: 'Chukwuebuka-2003', prs: [79] },
+            { login: 'danieldanielecki', issues: [66] },
+            { login: 'nexitpl', issues: [35] },
+            { login: 'aaronwork1205', issues: [55] },
+            { login: 'k2alzhang', issues: [39] },
         ],
     },
     {
@@ -150,6 +197,13 @@ export const RELEASES: Release[] = [
                 ],
             },
         ],
+        credits: [
+            { login: 'alexander-schneider', prs: [64] },
+            { login: 'Bortlesboat', prs: [65] },
+            { login: 'octo-patch', prs: [61] },
+            { login: 'TPTBusiness', prs: [63] },
+            { login: 'maplelaef0320', issues: [24] },
+        ],
     },
     {
         id: '2026-02',
@@ -161,6 +215,10 @@ export const RELEASES: Release[] = [
                 title: 'Changes',
                 items: ['Shanghai, Shenzhen and Hong Kong tickers are converted to TradingView’s format, so their charts load. #57'],
             },
+        ],
+        credits: [
+            { login: 'CrixusWen', prs: [57] },
+            { login: 'ravixalgorithm', prs: [51] },
         ],
     },
     {
@@ -180,6 +238,11 @@ export const RELEASES: Release[] = [
                 ],
             },
         ],
+        credits: [
+            { login: 'ravixalgorithm', prs: [40, 45, 46, 48] },
+            { login: 'nexitpl', issues: [33, 44] },
+            { login: 'cn-zeus-jp', issues: [27] },
+        ],
     },
     {
         id: '2025-12',
@@ -196,6 +259,9 @@ export const RELEASES: Release[] = [
                 ],
             },
         ],
+        credits: [
+            { login: 'ravixalgorithm', prs: [32] },
+        ],
     },
     {
         id: '2025-10',
@@ -208,8 +274,15 @@ export const RELEASES: Release[] = [
                 items: [
                     'Started on 28 Sep 2025 and first deployed on 4 Oct 2025: accounts, stock search and a TradingView-powered dashboard. #1 #9',
                     'Docker and Docker Compose support. #17',
+                    'Fixed a build error reported in the first weeks. #25',
                 ],
             },
+        ],
+        credits: [
+            { login: 'ravixalgorithm', prs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
+            { login: 'chinnsenn', prs: [17] },
+            { login: 'nb-src', prs: [25] },
+            { login: 'Terry0930', issues: [23] },
         ],
     },
 ];
