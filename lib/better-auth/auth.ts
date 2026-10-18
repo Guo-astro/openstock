@@ -83,7 +83,19 @@ export const getAuth = async () => {
     return authInstance;
 }
 
-export const auth = await getAuth();
+type Auth = ReturnType<typeof createAuth>;
+
+// Connects on first use, not at import: `next build` imports this module while collecting page data, and a
+// top-level `await getAuth()` made every build (Docker, Railway, CI) need a reachable MongoDB.
+export const auth = {
+    api: new Proxy({} as Auth['api'], {
+        get: (_, method) => async (...args: unknown[]) => {
+            const { api } = await getAuth();
+            return (api[method as keyof Auth['api']] as (...a: unknown[]) => unknown)(...args);
+        },
+    }),
+    handler: async (request: Request) => (await getAuth()).handler(request),
+};
 
 // One session lookup per request, shared by layouts, pages and actions
 export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));

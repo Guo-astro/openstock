@@ -3,9 +3,9 @@ import { CandlestickChart } from "lucide-react";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import StockHeader, { StockHeaderSkeleton } from "@/components/stocks/StockHeader";
 import StockSentimentCard from "@/components/stocks/StockSentimentCard";
+import StockChart from "@/components/stocks/StockChart";
 import Panel from "@/components/Panel";
 import {
-    CANDLE_CHART_WIDGET_CONFIG,
     TECHNICAL_ANALYSIS_WIDGET_CONFIG,
     COMPANY_PROFILE_WIDGET_CONFIG,
     COMPANY_FINANCIALS_WIDGET_CONFIG,
@@ -40,14 +40,7 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
             <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(320px,400px)]">
                 <div className="flex min-w-0 flex-col gap-3">
                     {isChartEmbeddable(tvSymbol) ? (
-                        <Panel title="Chart" sub="Live from TradingView · switch interval and style in the chart">
-                            <TradingViewWidget
-                                scriptUrl={`${scriptUrl}advanced-chart.js`}
-                                config={CANDLE_CHART_WIDGET_CONFIG(tvSymbol)}
-                                height={560}
-                                allowExpand
-                            />
-                        </Panel>
+                        <StockChart tvSymbol={tvSymbol} scriptUrl={`${scriptUrl}advanced-chart.js`} />
                     ) : (
                         // TradingView refuses this exchange's chart in embeds; say so instead of showing its error
                         <Panel title="Chart" sub="Only on TradingView for this exchange">

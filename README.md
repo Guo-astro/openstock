@@ -267,15 +267,15 @@ The one-click template provisions OpenStock and a MongoDB database and prompts f
 
 OpenStock ships with a [`railway.json`](railway.json) so it can be deployed on [Railway](https://railway.com) using the existing `Dockerfile`, with a healthcheck on `/sign-in` and automatic restarts on failure.
 
-1) Create a new project on Railway and add a **MongoDB** database (`+ New → Database → MongoDB`). Make sure its TCP Proxy is enabled so `MONGO_PUBLIC_URL` is available.
+1) Create a new project on Railway and add a **MongoDB** database (`+ New → Database → MongoDB`).
 2) Add a service from this GitHub repository (`+ New → GitHub Repo`). Railway detects `railway.json` and builds with the `Dockerfile`.
 3) In the service **Variables**, set:
 
 ```env
-MONGODB_URI=${{MongoDB.MONGO_PUBLIC_URL}}
+MONGODB_URI=${{MongoDB.MONGO_URL}}
 BETTER_AUTH_SECRET=${{secret(32)}}
 BETTER_AUTH_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}
-NEXT_PUBLIC_FINNHUB_API_KEY=your_finnhub_key
+FINNHUB_API_KEY=your_finnhub_key
 GEMINI_API_KEY=your_gemini_api_key
 INNGEST_SIGNING_KEY=your_inngest_signing_key
 NODEMAILER_EMAIL=youraddress@gmail.com
@@ -285,8 +285,8 @@ NODEMAILER_PASSWORD=your_gmail_app_password
 4) Under **Settings → Networking**, generate a public domain, then redeploy.
 
 Notes
-- `NEXT_PUBLIC_FINNHUB_API_KEY` is inlined at build time; Railway passes it to the Docker build as a build arg, so redeploy after changing it.
-- Use `MONGO_PUBLIC_URL` (not `MONGO_URL`): `next build` connects to MongoDB while collecting page data, and Railway's private network is not available during builds.
+- All variables are read when the container starts; nothing is passed to the Docker build, so no key ends up in the image. `NEXT_PUBLIC_FINNHUB_API_KEY` still works as a fallback name.
+- The build needs no database or secrets, so the private `MONGO_URL` works and the MongoDB TCP proxy can stay off.
 - For scheduled jobs (news summaries, alerts), add your Railway domain as an app in the [Inngest dashboard](https://app.inngest.com) pointing to `https://<your-domain>/api/inngest`.
 - See [Environment Variables](#environment-variables) for the optional variables (Adanos, MiniMax, Kit, etc.).
 
