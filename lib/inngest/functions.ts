@@ -367,7 +367,7 @@ export const checkInactiveUsers = inngest.createFunction(
             const mongoose = await connectToDatabase();
             const db = mongoose.connection.db;
 
-            let sent = 0;
+            const sent = 0; // nothing is sent until a 1:1 sender exists
 
             for (const user of inactiveUsers) {
                 if (!user.email) continue;
@@ -467,16 +467,9 @@ export const checkInactiveUsers = inngest.createFunction(
                     // 2. (This is too slow for loop).
 
                     // Not sent. kit.sendBroadcast mails the whole list, so a "test user" send here went to every
-                    // subscriber. Wire up a 1:1 send (Kit tag + sequence, or nodemailer) before enabling this.
-                    void subject; void content;
-
-                    // Update DB to avoid loop
-                    if (db) {
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        await db.collection('user').updateOne({ _id: new mongoose.Types.ObjectId(user.id) }, { $set: { lastReengagementSentAt: new Date() } });
-                    }
-                    sent++;
+                    // subscriber. Wire up a 1:1 send (Kit tag + sequence, or nodemailer) before enabling this, and
+                    // only then set lastReengagementSentAt and count it: marking unsent users would skip them for 30 days.
+                    void subject; void content; void db;
                 } catch (e) {
                     console.error("Failed to process user", user.id, e);
                 }
