@@ -1,7 +1,8 @@
 import Link from "next/link";
 import PageHero from "@/components/marketing/PageHero";
-import { REPO_URL } from "@/lib/constants";
-import { RELEASES } from "@/lib/changelog";
+import SectionHead from "@/components/marketing/SectionHead";
+import { GOOD_FIRST_ISSUES_URL, REPO_URL } from "@/lib/constants";
+import { MAINTAINER, RELEASES, type Credit } from "@/lib/changelog";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -24,6 +25,30 @@ const ItemText = ({ text }: { text: string }) => (
     </>
 );
 
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const creditLabel = ({ prs = [], issues = [] }: Credit) =>
+    [prs.length ? plural(prs.length, 'PR') : '', issues.length ? plural(issues.length, 'issue') : ''].filter(Boolean).join(' · ');
+const creditTitle = ({ prs = [], issues = [] }: Credit) =>
+    [prs.length ? `Pull requests ${prs.map((n) => `#${n}`).join(' ')}` : '', issues.length ? `Issues ${issues.map((n) => `#${n}`).join(' ')}` : ''].filter(Boolean).join(' · ');
+
+const Avatar = ({ login, size }: { login: string; size: number }) => (
+    <img src={`https://github.com/${login}.png?size=${size * 2}`} alt="" width={size} height={size} loading="lazy" className="flex-none rounded-full bg-page" />
+);
+
+// Everyone across every release, the maintainer first, then by pull requests and issues
+const CONTRIBUTORS = Object.values(
+    RELEASES.flatMap((r) => r.credits).reduce<Record<string, Required<Credit>>>((all, { login, prs = [], issues = [] }) => {
+        const person = (all[login] ??= { login, prs: [], issues: [] });
+        person.prs.push(...prs);
+        person.issues.push(...issues);
+        return all;
+    }, {}),
+).sort((a, b) =>
+    Number(b.login === MAINTAINER) - Number(a.login === MAINTAINER)
+    || b.prs.length - a.prs.length
+    || b.issues.length - a.issues.length
+    || a.login.localeCompare(b.login));
+
 export default function ChangelogPage() {
     return (
         <>
@@ -33,7 +58,7 @@ export default function ChangelogPage() {
                 sub="Every release since we started in September 2025, in plain words. Each change links to its pull request on GitHub."
             >
                 <Link href="/dashboard" className="btn btn-primary h-11 px-5 text-[15px]">Open dashboard</Link>
-                <a href={`${REPO_URL}/pulls?q=is%3Apr+is%3Amerged`} target="_blank" rel="noreferrer" className="btn btn-ghost h-11 px-5 text-[15px]">All merged pull requests</a>
+                <a href="#contributors" className="btn btn-ghost h-11 px-5 text-[15px]">Meet the {CONTRIBUTORS.length} contributors</a>
             </PageHero>
 
             <ol className="mx-auto mt-16 max-w-[1200px] px-5">
@@ -74,11 +99,58 @@ export default function ChangelogPage() {
                                         </div>
                                     ))}
                                 </div>
+
+                                <div className="mt-4 flex flex-wrap items-center gap-2">
+                                    <span className="kicker mr-1">Thanks to</span>
+                                    {release.credits.map((credit) => (
+                                        <a
+                                            key={credit.login}
+                                            href={`https://github.com/${credit.login}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            title={creditTitle(credit)}
+                                            className="flex items-center gap-2 rounded-full bg-card py-1 pl-1 pr-3 shadow-[inset_0_0_0_1px_var(--line)] transition-colors hover:bg-hover"
+                                        >
+                                            <Avatar login={credit.login} size={22} />
+                                            <span className="text-[13px] font-semibold text-foreground">{credit.login}</span>
+                                            <span className="text-[12px] text-faint">{creditLabel(credit)}</span>
+                                        </a>
+                                    ))}
+                                </div>
                             </section>
                         </li>
                     );
                 })}
             </ol>
+
+            <section id="contributors" className="mx-auto mt-24 max-w-[1200px] scroll-mt-24 px-5">
+                <SectionHead
+                    kicker="Contributors"
+                    title={`Built by ${CONTRIBUTORS.length} people.`}
+                    sub="Everyone whose pull request or issue shaped a release above. Thank you: this is your work."
+                />
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {CONTRIBUTORS.map((person) => (
+                        <a key={person.login} href={`https://github.com/${person.login}`} target="_blank" rel="noreferrer" title={creditTitle(person)} className="hatch group">
+                            <div className="card flex items-center gap-3 p-4 transition-colors group-hover:bg-hover">
+                                <Avatar login={person.login} size={40} />
+                                <div className="min-w-0">
+                                    <p className="flex items-center gap-2 font-semibold">
+                                        <span className="truncate">{person.login}</span>
+                                        {person.login === MAINTAINER && <span className="pill is-brand shrink-0">Maintainer</span>}
+                                    </p>
+                                    <p className="text-[13px] text-faint">{creditLabel(person)}</p>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+                <p className="mt-6 text-[14px] text-faint">
+                    Want to be here? Pick a{' '}
+                    <a href={GOOD_FIRST_ISSUES_URL} target="_blank" rel="noreferrer" className="font-semibold text-brand-ink hover:underline">good first issue</a>
+                    {' '}or report a bug you hit.
+                </p>
+            </section>
         </>
     );
 }
