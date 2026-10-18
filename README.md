@@ -208,24 +208,26 @@ You can run OpenStock and MongoDB easily with Docker Compose.
 - openstock (this app)
 - mongodb (MongoDB database with a persistent volume)
 
-3) Create your `.env` (see examples below). For the Docker setup, use a local connection string like:
+3) Create your `.env` (see examples below). For the Docker setup, pick a MongoDB password and use it in both places:
 ```env
-MONGODB_URI=mongodb://root:example@mongodb:27017/openstock?authSource=admin
+MONGO_ROOT_PASSWORD=change-me
+MONGODB_URI=mongodb://root:change-me@mongodb:27017/openstock?authSource=admin
 ```
 
 4) Start the stack:
 ```bash
 # from the repository root
-docker compose up -d mongodb && docker compose up -d --build
+docker compose up -d --build
 ```
 
 5) Access the app:
 - App: http://localhost:3000
-- MongoDB is available inside the Docker network at host mongodb:27017
+- MongoDB is only reachable inside the Docker network, at host mongodb:27017. It isn't published on your machine.
 
 Notes
 - The app service depends_on the mongodb service.
-- Credentials are defined in Compose for the MongoDB root user; authSource=admin is required on the connection string for root.
+- The MongoDB root password comes from `MONGO_ROOT_PASSWORD` (default `example`, only applied when the volume is first created); authSource=admin is required on the connection string for root.
+- The image build needs no `.env`: every variable is read when the container starts.
 - Data persists across restarts via the docker volume.
 - `NODEMAILER_EMAIL` and `NODEMAILER_PASSWORD` are optional for local Docker runs. If they are omitted, the app still starts but email features stay disabled.
 
@@ -238,9 +240,7 @@ services:
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-example}
     volumes:
       - mongo-data:/data/db
     healthcheck:
