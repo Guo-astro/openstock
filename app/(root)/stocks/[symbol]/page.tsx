@@ -11,6 +11,7 @@ import {
     COMPANY_FINANCIALS_WIDGET_CONFIG,
 } from "@/lib/constants";
 import { getStockSentimentInsights } from '@/lib/actions/adanos.actions';
+import { getStockMetrics } from '@/lib/actions/finnhub.actions';
 import { formatSymbolForTradingView, isChartEmbeddable, tradingViewSymbolUrl } from '@/lib/utils';
 
 const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
@@ -21,6 +22,17 @@ async function Sentiment({ symbol }: { symbol: string }) {
     return (
         <Panel title="Sentiment" sub="Reddit, X.com, news and Polymarket">
             <StockSentimentCard insight={insight} />
+        </Panel>
+    );
+}
+
+async function DividendYield({ symbol }: { symbol: string }) {
+    const dividendYield = await getStockMetrics(symbol);
+    return (
+        <Panel title="Dividend Yield">
+            <p className="text-2xl font-semibold text-white">
+                {dividendYield !== null ? `${dividendYield.toFixed(2)}%` : "—"}
+            </p>
         </Panel>
     );
 }
@@ -73,6 +85,9 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
                             height={400}
                         />
                     </Panel>
+                    <Suspense fallback={null}>
+                        <DividendYield symbol={symbol} />
+                    </Suspense>
                     <Suspense fallback={null}>
                         <Sentiment symbol={symbol} />
                     </Suspense>
