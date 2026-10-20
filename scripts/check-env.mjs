@@ -55,7 +55,7 @@ const optionalVars = {
 
     // MiniMax (optional AI provider fallback)
     'MINIMAX_API_KEY': 'MiniMax API key (used when AI_PROVIDER=minimax or as fallback)',
-    'MINIMAX_MODEL': 'MiniMax model override (default: MiniMax-M3)',
+    'MINIMAX_MODEL': 'MiniMax model override (default: MiniMax-M3.1-Flash; alternative: MiniMax-M3)',
     'MINIMAX_BASE_URL': 'MiniMax API base URL override (default: https://api.minimax.io/v1)',
     'SIRAY_API_KEY': 'Siray.ai API key (used when AI_PROVIDER=siray or as fallback)',
 
